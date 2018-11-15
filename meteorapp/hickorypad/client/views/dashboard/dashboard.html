@@ -1,0 +1,172 @@
+<template name="dashboard">
+    <div class="container">
+
+        <div class="container-fluid">
+            {{>sidebar}}
+            <div class="col-sm-9 col-sm-offset-2 main">
+                <h1 class="page-header">Dashboard</h1>
+
+                <row>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        {{>alertSummary}}
+                    </div>
+                    <div class="col-sm-6 placeholder">
+                        {{> highchartsHelper chartId="test" chartWidth="100%" charHeight="200px" chartObject=topGenresChart}}
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        {{>indicatorMetrics}}
+                    </div>
+                </row>
+                <button class="clickable">Update Rules</button>
+
+                <row>
+                    <h2 class="sub-header">10 Most Recent Alerts</h2>
+                </row>
+                <row>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Type</th>
+                                <th>Severity</th>
+                                <th>Host</th>
+                                {{!--<th>IOC Source</th>--}}
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each alerts}}
+                                <tr>
+                                    <td>{{timestamp}}</td>
+                                    <td>{{event_type}}</td>
+                                    <td>{{alert.severity}}</td>
+                                    <td>{{dest_ip}}</td>
+                                    {{!--<td></td>--}}
+                                    {{#if isReported}}
+
+                                        <td>
+                                            <div class="btn btn-xs fa fa-eye"></div>
+                                        </td>
+                                    {{else}}
+                                        <td>
+                                            <div class="btn btn-xs fa fa-eye-slash"></div>
+                                        </td>
+                                    {{/if}}
+
+                                </tr>
+                            {{/each}}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </row>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="gaugeDemo">
+    <div id="container-gauge" style="width: 253.25px; height: 168.75px;"></div>
+    <!--<div id="container-gauge" style="width: 300px; height: 200px;"></div>-->
+</template>
+
+<template name="networkData">
+    <div class="row">
+        <div class="rowChart">
+
+        </div>
+    </div>
+</template>
+
+
+<template name="sidebar">
+    <div class="col-sm-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li class="active">
+                <a href="#">Overview</a>
+            </li>
+            <li>
+                <a href="{{pathFor sources}}"> Data Sources</a>
+            </li>
+            <li>
+                <a href="#">Analytics</a>
+            </li>
+            <li>
+                <a href="#">Export</a>
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar">
+            <li>
+                <a href="">Sensors</a>
+            </li>
+        </ul>
+        <ul class="nav nav-sidebar">
+            <li>
+            </li>
+            <li>
+            </li>
+            <li>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<template name="indicatorMetrics">
+    <div class="row">
+        <h2>Community Defense</h2>
+    </div>
+    <div class="col-md-7">
+        {{!--<div class="big-count">{{indicatorTotal}}</div>--}}
+        <div class="big-count">{{getPublishedCount 'indicatorCount'}} </div>
+        <div class="big-count-type">Indicators Loaded</div>
+    </div>
+    <div class="col-md-5">
+        <div class="source-notes">
+            {{#each dataSources}}
+                <span class="community-summary-a">{{name}}</span>
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="indicatorMetricsDemo">
+    <div class="row">
+        <h2>Community</h2>
+    </div>
+    <div class="col-md-7">
+        <div class="big-count">23k</div>
+        <div class="big-count-type">Indicators Loaded</div>
+    </div>
+    <div class="col-md-5">
+        <div class="source-notes">
+            <span class="community-summary-a">SEN.1</span>
+            <span class="community-summary-a">SEN.2</span>
+            <span class="community-summary-a">SEN.3</span>
+
+        </div>
+    </div>
+</template>
+
+
+<template name="alertSummary">
+    {{!--Change tile color to bright red on active alerts --}}
+    {{#if activeAlerts}}
+        <div class="dashtile-active-alert">
+            {{!--<div class="alert-id-text">{{alertCount}}</div>--}}
+            <div class="alert-id-text">{{getPublishedCount 'alertCount'}} </div>
+            <div class="alert-id-text-title">Active Alerts</div>
+        </div>
+    {{else}}
+        <div class="dashtile">
+            <div class="alert-id-text">{{getPublishedCount 'alertCount'}} </div>
+            <div class="alert-id-text-title">Active Alerts</div>
+        </div>
+
+    {{/if}}
+</template>
+
+<template name="sensorChart">
+    <div id="sensorCharter" style="height: 400px; min-width: 200px"></div>
+</template>

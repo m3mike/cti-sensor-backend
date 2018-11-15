@@ -1,0 +1,160 @@
+{#{% extends 'theme_bootstrap/base.html' %}#}
+{% load staticfiles %}
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>{% block title %}Hickory Management App | {{ site_name }}{% endblock %}</title>
+
+        <!-- CSS -->
+        {% compress css %}
+        <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap/css/bootstrap-theme.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap/css/sticky-footer-navbar.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}" rel="stylesheet">
+        <link href="{% static 'fontawesome/css/font-awesome.css' %}" rel="stylesheet">
+
+        {% block extracss %}{% endblock %}
+        {% endcompress %}
+
+        <!-- Add custom CSS here -->
+        {% block customcss %}
+            <style>
+                body {padding-bottom: 40px;}
+            </style>
+        {% endblock %}
+
+        <!-- RSS Feed -->
+{#        <link rel="alternate" type="application/rss+xml" title="RSS Feed for {{ site_name }}" href="{% url 'rss_feed' %}" />#}
+
+        <!-- Enables 'Add to Homescreen' for Android -->
+        <meta name="viewport" content="width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <link rel="icon" sizes="192x192" href="{% static 'images/icons/mobile.png' %}">
+
+        {% block extrahead %}{% endblock %}
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if user.is_authenticated %}
+                <a class="navbar-brand" href="{% url 'dashboard' %}">
+                  <span class="fa fa-tint"></span> Hickory</a>
+                {% else %}
+                <a class="navbar-brand" href="/">
+                  <span class="fa fa-tint"></span> Hickory</a>
+                {% endif %}
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                  {% if user.is_authenticated %}
+                    <li><a href="{% url 'sensor_create' %}">
+                        <span class="fa fa-plus"></span>&nbsp;New Sensor</a>
+                    </li>
+
+                    <li><a href="{% url 'dashboard' %}">
+                        <span class="fa fa-th"></span>&nbsp;Dashboard</a>
+                    </li>
+
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                         <span class="fa fa-bar-chart"></span>&nbsp;Reports <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="{% url 'alerts_filter' %}">Filter Data</a></li>
+                      <li><a href="{% url 'alerts_charts' %}">Charts & Graphs</a></li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'alerts_email_report' %}">Email Report</a></li>
+                    </ul>
+                    </li>
+
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-user"></span>&nbsp;
+                        {{ user }} <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="{% url 'usersettings' %}">Account Settings</a></li>
+                      <li><a href="{% url 'password_change' %}">Change Password</a></li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'help' %}">Help</a></li>
+                      <li class="divider"></li>
+                      <li><a href="{% url 'logout' %}">Log Out</a></li>
+                    </ul>
+                    </li>
+                  {% else %}
+                    <form class="navbar-form navbar-right">
+                    <button type="button" class="btn btn-primary"
+{#                        onclick="location.href=&quot;{% url 'login' %}&quot;;"#}
+                            >
+                        Log In</button>
+                    </form>
+                  {% endif %}
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container -->
+        </nav>
+
+        {% block rootcontainer %}
+        <div class="container">
+          <div class="row">
+            {% block breadcrumbs %}{% endblock %}
+            <div class="col-lg-12">
+                <div class="page-header">
+                    {% block heading %}{% endblock %}
+                </div>
+                {% block content %}{% endblock %}
+            </div>
+          </div>
+        </div><!-- /.container -->
+        {% endblock %}
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="container">
+                <footer>
+                  <p class="pull-right"><a href="#">Back to top</a></p>
+                  <p class="text-muted">
+                      &copy; 2015 PrairieFire.co
+                  </p>
+                </footer>
+            </div>
+        </div>
+
+        <!-- JavaScript -->
+        <!-- Placed at the end of the document for performance -->
+        {% compress js %}
+        <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'moment/min/moment.min.js' %}"></script>
+        <script src="{% static 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        {% block extrajs %}{% endblock %}
+        {% endcompress %}
+
+        <!-- Disable submit buttons after click to prevent multiple submissions. -->
+        <script type="text/javascript">
+            $(function () {
+                $('form').submit(function(){
+                    $(this).find('input[type=submit]').prop('disabled', true);
+                });
+            });
+        </script>
+
+       {% block extrajsexternal %}{% endblock %}
+    </body>
+</html>

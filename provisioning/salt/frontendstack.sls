@@ -1,0 +1,2 @@
+frontendstack:
+  - nginx

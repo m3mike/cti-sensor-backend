@@ -1,0 +1,16 @@
+<template name="insertDataSource">
+    {{> quickForm collection="DataSources" id="insertDataSource" fields="name,url,feed,username,password" type="insert"}}
+</template>
+
+<template name="sources">
+    <div class="container">
+
+        <div class="container-fluid">
+            {{>sidebar}}
+            <div class="col-sm-9 col-sm-offset-2 main">
+                <h1 class="page-header">Data Sources</h1>
+                {{> insertDataSource}}
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,49 @@
+{% extends "theme_bootstrap/base.html" %}
+
+{% load staticfiles %}
+{% load metron_tags %}
+{% load i18n %}
+{% load pinax_theme_bootstrap_tags %}
+{% load bootstrap %}
+{% load account_tags %}
+{% load compress %}
+
+{% block head_title_base %} Hickory {% endblock %}
+
+{% block style_base %}
+    <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
+    <link href="{% static "css/site.css" %}" rel="stylesheet">
+    <link href="{% static "css/site2.css" %}" rel="stylesheet">
+
+    {% block extra_style %}{% endblock %}
+{% endblock %}
+
+
+{% block extra_head_base %}
+    {% block extra_head %}{% endblock %}
+{% endblock %}
+
+{% block site_brand %}<a class="navbar-brand" href="{% url "home" %}">Hickory</a>{% endblock %}
+
+{% block footer %}
+    {% include "_footer.html" %}
+{% endblock %}
+
+
+{% block extra_body_base %}
+    {% analytics %}
+    {% block extra_body %}
+        <!-- JavaScript -->
+        <!-- Placed at the end of the document for performance -->
+        {% compress js %}
+            <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+            {#        <script src="{% static 'js/bootstrap.min.js' %}"></script>#}
+            <script src="{% static 'moment/min/moment.min.js' %}"></script>
+            <script src="{% static 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+        {% endcompress %}
+
+        {% block extrajs %}{% endblock %}
+        {% block extrajsexternal %}{% endblock %}
+
+    {% endblock %}
+{% endblock %}

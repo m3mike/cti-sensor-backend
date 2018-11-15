@@ -1,0 +1,33 @@
+#
+# Vagrantfile for custom centos-7 box with suricata built from source and
+# packaged and installed as an RPM.  This is a stock Centos 7 install with:
+# Vagrant customizations and Suricata dependencies and updated the latest
+# available packages via Yum.  Next step will be integrating provisioning
+# and configuring multi-vm deployment via vagrant.
+#
+# Vagrant will pull the centos7-sensor image from Atlas, at
+# https://atlas.hashicorp.com/3rdpaw/boxes/centos7-sensor/versions/0.0.3 (or
+# newer version if one is available.)
+#
+# Step 1.  Install VirtualBox.
+# Step 2.  Install vagrant (https://www.vagrantup.com)
+# Step 3.  From the directory with this file, run "vagrant up".
+# Step 4.  After the box downloads (takes about 10-15 minutes depending on
+#           network connection), vagrant will bring the box up.
+# Step 5.  Run "vagrant ssh" to get a terminal into the box.
+#
+# At any point with vagrant, you can run "vagrant suspend" to suspend the VM,
+# or "vagrant halt" to shut it down, and "vagrant destroy" to remove your copy
+# with customizations.  Vagrant will still (I think) have a local copy of the
+# base box, the one downloaded from Atlas via this file, stored in your
+# Vagrant home directory (Mac and Linux in ~/.vagrant.d).  The "vagrant box update"
+# command will update the base box when a new version is posted.
+#
+# Vagrant supports other providers, such as Parallels and VMware, but
+# virtualbox is the most commonly used one.
+#
+
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "3rdpaw/centos7-sensor"
+end

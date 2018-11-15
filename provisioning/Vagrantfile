@@ -1,0 +1,63 @@
+
+
+
+# Bring up one sensor box, elkstack box, and a frontend webui box using vagrant.
+# A single _vagrant up_ command will bring all the devices up.
+# TODO: Tie in IP assignment to hosts config installed by salt during provisioning.
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
+
+Vagrant.configure("2") do |config|
+
+	# salt master and web interface
+  config.vm.define "webui" do |webui|
+    webui.vm.box = "3rdpaw/centos7-fresh"
+    webui.vm.network :private_network, ip: "172.16.16.100"
+    webui.vm.hostname = 'webui'
+    webui.vm.synced_folder "salt/", "/srv/salt/"
+    webui.vm.provision :shell, path: "provision_common.sh"
+    webui.vm.provision :shell, path: "provision_webui.sh"
+    # salt time
+    webui.vm.provision :salt do |salt|
+      salt.minion_config = 'salt/minion'
+      salt.run_highstate = true
+      salt.verbose = true
+    end    
+  end
+
+  # minion elk configured and ready
+  config.vm.define "elk" do |elk|
+    elk.vm.box = "3rdpaw/centos7-fresh"
+    elk.vm.network :private_network, ip: "172.16.16.101"    
+    elk.vm.hostname = 'elkstack'
+    elk.vm.synced_folder "salt/", "/srv/salt/"
+    elk.vm.provision :shell, path: "provision_common.sh"
+    elk.vm.provision :shell, path: "provision_elk.sh"
+    # salt time
+    elk.vm.provision :salt do |salt|
+      salt.minion_config = 'salt/minion'
+      salt.run_highstate = true
+      salt.verbose = true
+    end
+  end
+
+  # minion sensor (one or more in production)
+  # TODO: Switch to loop with configurable iterations and make
+  # X number of sensors, where hostname will be "sensorX" 
+  # and IP will be "172.16.16.102 + X"
+  config.vm.define "sensor1" do |sensor1|
+    sensor1.vm.box = "3rdpaw/centos7-fresh"
+    sensor1.vm.network :private_network, ip: "172.16.16.102"
+    sensor1.vm.network :public_network
+    sensor1.vm.hostname = "sensor1"
+    sensor1.vm.synced_folder "salt/", "/srv/salt/"
+    sensor1.vm.provision :shell, path: "provision_common.sh"
+    sensor1.vm.provision :shell, path: "provision_sensor.sh"
+    # salt time
+    sensor1.vm.provision :salt do |salt|
+      salt.minion_config = 'salt/minion'
+      salt.run_highstate = true
+      salt.verbose = true
+    end
+  end
+
+end

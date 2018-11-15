@@ -1,0 +1,2 @@
+sensorstack:
+  - lumberjack
